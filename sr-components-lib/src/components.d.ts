@@ -20,6 +20,13 @@ export namespace Components {
          */
         "middle": string;
     }
+    interface SrAutocomplete {
+        "suggestions": string[];
+    }
+}
+export interface SrAutocompleteCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLSrAutocompleteElement;
 }
 declare global {
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
@@ -28,8 +35,26 @@ declare global {
         prototype: HTMLMyComponentElement;
         new (): HTMLMyComponentElement;
     };
+    interface HTMLSrAutocompleteElementEventMap {
+        "select": string;
+    }
+    interface HTMLSrAutocompleteElement extends Components.SrAutocomplete, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLSrAutocompleteElementEventMap>(type: K, listener: (this: HTMLSrAutocompleteElement, ev: SrAutocompleteCustomEvent<HTMLSrAutocompleteElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLSrAutocompleteElementEventMap>(type: K, listener: (this: HTMLSrAutocompleteElement, ev: SrAutocompleteCustomEvent<HTMLSrAutocompleteElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLSrAutocompleteElement: {
+        prototype: HTMLSrAutocompleteElement;
+        new (): HTMLSrAutocompleteElement;
+    };
     interface HTMLElementTagNameMap {
         "my-component": HTMLMyComponentElement;
+        "sr-autocomplete": HTMLSrAutocompleteElement;
     }
 }
 declare namespace LocalJSX {
@@ -47,8 +72,13 @@ declare namespace LocalJSX {
          */
         "middle"?: string;
     }
+    interface SrAutocomplete {
+        "onSelect"?: (event: SrAutocompleteCustomEvent<string>) => void;
+        "suggestions"?: string[];
+    }
     interface IntrinsicElements {
         "my-component": MyComponent;
+        "sr-autocomplete": SrAutocomplete;
     }
 }
 export { LocalJSX as JSX };
@@ -56,6 +86,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
+            "sr-autocomplete": LocalJSX.SrAutocomplete & JSXBase.HTMLAttributes<HTMLSrAutocompleteElement>;
         }
     }
 }

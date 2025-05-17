@@ -9,6 +9,15 @@
     <script nomodule src="/build/sr-components-lib.js"></script>
   </head>
   <body>
-    <my-component first="Stencil" middle="'Don't call me a framework'" last="JS"></my-component>
+    <sr-autocomplete></sr-autocomplete>
+
+    <script>
+      const el = document.querySelector('sr-autocomplete');
+      el.suggestions = ['Apple', 'Banana', 'Orange', 'Grapes', 'Mango'];
+
+      el.addEventListener('select', e => {
+        console.log('You selected:', e.detail);
+      });
+    </script>
   </body>
 </html>
