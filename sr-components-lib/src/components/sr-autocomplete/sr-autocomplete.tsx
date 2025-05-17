@@ -1,4 +1,4 @@
-import { Component, h, State, Prop, Event, EventEmitter } from '@stencil/core';
+import { Component, h, State, Prop, Event, EventEmitter, Method } from '@stencil/core';
 
 @Component({
   tag: 'sr-autocomplete',
@@ -7,12 +7,20 @@ import { Component, h, State, Prop, Event, EventEmitter } from '@stencil/core';
 })
 export class SrAutocomplete {
   @Prop() suggestions: string[] = [];
+  @Prop() allowFreeText: boolean = false;
+
   @State() filtered: string[] = [];
   @State() inputValue: string = '';
 
   @Event() select: EventEmitter<string>;
 
-  onInput = (event: Event) => {
+  @Method()
+  async resetInput(): Promise<void> {
+    this.inputValue = '';
+    this.filtered = [];
+  }
+
+  private onInput = (event: Event) => {
     const value = (event.target as HTMLInputElement).value;
     this.inputValue = value;
     this.filtered = this.suggestions.filter(item =>
@@ -20,16 +28,28 @@ export class SrAutocomplete {
     );
   };
 
-  onSelect = (item: string) => {
+  private onSelect = (item: string) => {
     this.inputValue = item;
     this.filtered = [];
     this.select.emit(item);
   };
 
+  private onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' && this.allowFreeText && this.inputValue.trim()) {
+      this.select.emit(this.inputValue.trim());
+      this.filtered = [];
+    }
+  };
+
   render() {
     return (
       <div class="autocomplete">
-        <input type="text" value={this.inputValue} onInput={this.onInput} />
+        <input
+          type="text"
+          value={this.inputValue}
+          onInput={this.onInput}
+          onKeyDown={this.onKeyDown}
+        />
         {this.filtered.length > 0 && (
           <ul class="dropdown">
             {this.filtered.map(item => (

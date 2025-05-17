@@ -21,6 +21,8 @@ export namespace Components {
         "middle": string;
     }
     interface SrAutocomplete {
+        "allowFreeText": boolean;
+        "resetInput": () => Promise<void>;
         "suggestions": string[];
     }
 }
@@ -73,6 +75,7 @@ declare namespace LocalJSX {
         "middle"?: string;
     }
     interface SrAutocomplete {
+        "allowFreeText"?: boolean;
         "onSelect"?: (event: SrAutocompleteCustomEvent<string>) => void;
         "suggestions"?: string[];
     }
